@@ -14,15 +14,17 @@ import "./App.css";
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import Home from './home';
 import {cal} from './cal';
-import { Album } from './Album';
+import { rallyStats } from './rally';
 import { documentation } from './documentation';
 import { faq } from './faq';
 import { about } from './about';
+import { mission } from './mission';
+import { bannerdata } from './bannerdata';
+import { bannerdata2 } from './bannerdata2';
+import { sample } from './sample';
 import { workFlow } from './workflow';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -143,11 +145,11 @@ const styles = theme => ({
 const footers = [
   {
     title: 'Custom Majors',
-    description: [{name: 'Team', link: '/about', type: 'static'}, {name: 'Contact us', link: "", type: 'static'}],
+    description: [{name: 'Team', link: '/about'}, {name: 'Contact us', link: "", type: 'button'}],
   },
   {
     title: 'Quick Links',
-    description: [{name: 'Customisations', link: '/custChecks', type: 'static'}, {name: 'Developer stuff', link: '/developer', type: 'static'}, {name: 'Custom Request', link: '/submit', type: 'static'}],
+    description: [{name: 'Customisations', link: '/custChecks'}, {name: 'Developer stuff', link: '/developer'}, {name: 'Custom Request', link: '/submit'}],
   },
   {
     title: 'Legal',
@@ -166,7 +168,6 @@ class Pricing extends React.Component {
   }
 
   componentDidMount() {
-    // fetch("https://rally1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement?query=((%20Project.ObjectID%20=%2034860283988%20)%20AND%20(ScheduleState%20=%20Backlog%20))&fetch=FormattedID,Name&pagesize=1000").then(d=>d.json()).then(console.log).catch(console.error)
     fetch("http://localhost:8888/kishore").then(d => d.text()).then(d => console.log(d));
   }
 
@@ -203,42 +204,34 @@ class Pricing extends React.Component {
                   <Toolbar variant="dense">
 
                     <Link style={{ textDecoration: "none" }} to="/home">
-                      <Button style={{ marginLeft: 30, marginRight: 50, color: "#FFFFFF" }} >Home</Button>
+                      <Button style={{ marginLeft: 30, marginRight: 40, color: "#FFFFFF" }} >Home</Button>
                     </Link>
 
                     <Link style={{ textDecoration: "none" }} to="/submit">
-                      <Button style={{ marginRight: 50, color: "#FFFFFF" }} >Request a custom</Button>
+                      <Button style={{ marginRight: 40, color: "#FFFFFF" }} >Request a custom</Button>
                     </Link>
 
-                    <Button style={{ marginRight: 50, color: "#FFFFFF" }} >
+                    <Button style={{ marginRight: 40, color: "#FFFFFF" }} >
                       <a href="http://dpopsweb/Main/CA/CreateRequestNoTabs.aspx?pcat=1319AC4" target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: "none" }}>
                         Raise a Defect</a>
                     </Button>
+                    <Button style={{ marginRight: 40, color: "#FFFFFF" }} >
+                      <a href="http://apps.adpcorp.com/Sites/AutoPayDev-Teams/AP%20Custom%20Majors/Forms/AllItems.aspx " target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: "none" }}>
+                      Documentation </a>
+                    </Button>
 
-                    <Link style={{ textDecoration: "none" }} to="/documentation">
-                      <Button style={{ marginRight: 50, color: "#FFFFFF" }} >Documentation</Button>
+                    <Link style={{ textDecoration: "none" }} to="/mission">
+                      <Button style={{ marginRight: 40, color: "#FFFFFF" }} >Vision & Mission</Button>
                     </Link>
+
 
                     <Link style={{ textDecoration: "none" }} to="/about">
-                      <Button style={{ marginRight: 50, color: "#FFFFFF" }} >About Us</Button>
+                      <Button style={{ marginRight: 40, color: "#FFFFFF" }} >About Us</Button>
                     </Link>
 
-                    <Button style={{ marginRight: 50, color: "#FFFFFF" }} onClick={this.handleOpen}>Contact Us</Button>
+                    <Button style={{ marginRight: 40, color: "#FFFFFF" }} onClick={this.handleOpen}>Contact Us</Button>
 
                     <div className={classes.grow} />
-
-                    <div className={classes.search}>
-                      <div className={classes.searchIcon}>
-                        <SearchIcon />
-                      </div>
-                      <InputBase
-                        placeholder="Search…"
-                        classes={{
-                          root: classes.inputRoot,
-                          input: classes.inputInput,
-                        }}
-                      />
-                    </div>
 
                   </Toolbar>
                 </AppBar>
@@ -252,9 +245,13 @@ class Pricing extends React.Component {
                       <Route path="/documentation" component={documentation} />
                       <Route path="/faq" component={faq} />
                       <Route path="/about" component={about} />
-                      <Route path="/album" component={Album} />
+                      <Route path="/mission" component={mission} />
+                      <Route path="/bannerdata" component={bannerdata} />
+                      <Route path="/bannerdata2" component={bannerdata2} />
+                      <Route path="/sample" component={sample} />
                       <Route path="/workflow" component={workFlow} />
                       <Route path="/cal" component={cal} />
+                      <Route path="/rally" component={rallyStats} />
                       <Route component={Home} />
                     </Switch>
                   </main>
@@ -275,20 +272,33 @@ class Pricing extends React.Component {
                     <DialogContentText id="alert-dialog-slide-description">
                       <div>
                         <table>
-                          <col width="200" />
-                          <col width="200" />
+                          <col width="400" />
+                          <col width="400" />
                           <tr>
-                            <td>Lori Coleli</td>
-                            <td>Sireesha Somayajula</td>
+                            <td>Roseland, NJ, USA:</td>
+                            <td>Lori Colelli  </td>
                           </tr>
                           <tr>
-                            <td>Senior Director</td>
-                            <td>Senior Manager</td>
+                            <td></td>
+                            <td>email@ Lori.Colelli@adp.com </td>
                           </tr>
                           <tr>
-                            <td>NJ, Roseland</td>
-                            <td>F9, Hyderabad</td>
+                            <td></td>
+                            <td>Work  +1 973-974-2337</td>
                           </tr>
+                          <tr>
+                            <td>Hyderabad, India:</td>
+                            <td>Sireesha Somayajula </td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>email@ Sireesha.Somayajula@adp.com</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>  Work   +91 770-299-2346 </td>
+                          </tr>
+                          
                         </table>
                       </div>
                     </DialogContentText>
@@ -311,12 +321,12 @@ class Pricing extends React.Component {
                         {footer.description.map((item, i) => {
                           switch (item.type) { 
                             case 'dynamic':
-                              return <a key={i} href={item.link} target="_blank" style={{ color: '#FFFFFF', textDecoration: "none" }}>
+                              return <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: "none" }}>
                                     <Typography variant="subtitle1" color="textSecondary">
                                       {item.name}
                                     </Typography>
                                     </a>
-                            case 'static':
+                            default:
                               return  <Link key={i} to={item.link}><Typography variant="subtitle1" color="textSecondary">
                                         {item.name}
                                         </Typography>

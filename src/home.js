@@ -6,27 +6,14 @@ import PropTypes from 'prop-types';
 import CardHeader from '@material-ui/core/CardHeader';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
-import { workFlow } from './workflow';
 import { withStyles } from '@material-ui/core/styles';
 import AliceCarousel from 'react-alice-carousel';
+import responsive from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
 import Banner1 from './Banner1.png';
 import Banner2 from './Banner2.jpg';
-import Banner3 from './Banner3.jpg';
-import {Filemanager} from './Filemanager'
 
 const styles = theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  appBar: {
-    position: 'relative',
-  },
-  toolbarTitle: {
-    flex: 1,
-  },
   layout: {
     width: 'auto',
     marginLeft: theme.spacing.unit * 3,
@@ -37,42 +24,23 @@ const styles = theme => ({
       marginRight: 'auto',
     },
   },
-  heroContent: {
-    maxWidth: 600,
-    margin: '0 auto',
-    padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`,
-  },
   cardHeader: {
     backgroundColor: theme.palette.grey[200],
   },
-  cardPricing: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  cardActions: {
-    [theme.breakpoints.up('sm')]: {
-      paddingBottom: theme.spacing.unit * 2,
-    },
-  },
-
 });
 
 const tiers = [
   {
-    title: 'Work Flow',
-    description: ['Request Lifecyle', 'Defect Lifecycle', 'What we Do'],
-    link: '/workflow',
+    title: 'What We Do',
+    description: [{name: 'Customize Payrolls', link: '/bannerdata'}, {name: 'Payroll Features Support', link: ''}, {name: 'Talent Development', link: '/bannerdata2'}],
   },
   {
-    title: 'Important Links',
-    subheader: '    ',
-    description: ['Track your Request', 'Request a Custom', 'Raise a Defect'],
+    title: 'How We Do',
+    description: [{name: 'Request Life Cycle', link: '/workflow'}, {name: 'Defect Life Cycle', link: '/workflow'}, {name: 'Patch / Release Calendar ', link: '/cal'}],
   },
   {
-    title: 'Request Status',
-    description: ['Requests in Progress', 'Requests in Backlog', 'Blocked Requests'],
+    title: 'Help Needed',
+    description: [{name: 'Submit a New Request', link: '/submit'}, {name: 'Submit a Defect', link: 'http://dpopsweb/Main/CA/CreateRequestNoTabs.aspx?pcat=1319AC4', type: 'dynamic'}, {name: 'Track Your Request', link: '/rally'}],
   },
 ];
 
@@ -85,14 +53,23 @@ export class Home extends React.Component {
     return (
       <div style={{ textAlign: "center"}}>
         <main className={classes.layout}>
-
-          <AliceCarousel fadeOutAnimation={true} autoPlay={true} autoPlayInterval={4500} stopAutoPlayOnHover={true}
-            infinite={true} buttonsDisabled={true}>
-            <img src={Banner1} alt={' '} width='1000' height='250'/>
+        {/* <Link style={{ textDecoration: "none" }} to="/bannerdata"> */}
+             <link></link>         
+                   
+          <AliceCarousel fadeOutAnimation={true} autoPlay={true} autoPlayInterval={3000} stopAutoPlayOnHover={true}
+            infinite={true} buttonsDisabled={true}  responsive={responsive}> 
+             <Link style={{ textDecoration: "none" }} to="/bannerdata">
+            <img src={Banner1} alt={' '} width='1000' height='250' />
+            </Link>
+            <Link style={{ textDecoration: "none" }} to="/bannerdata2">
             <img src={Banner2} alt={' '} width='1000' height='250'/>
+            </Link>
+            {/* <Link style={{ textDecoration: "none" }} to="/home">
             <img src={Banner3} alt={' '} width='1000' height='250'/>
+            </Link> */}
+            
             </AliceCarousel>
-
+            {/* </Link> */}
           <div style={{paddingRight: 140, paddingLeft: 140, margin: 'auto', align: 'center',marginTop: 25 }}>
             {/* End hero unit */}
             <Grid container spacing={40} alignItems="flex-end">
@@ -108,14 +85,24 @@ export class Home extends React.Component {
                       subheaderTypographyProps={{ align: 'center' }}
                       className={classes.cardHeader}
                     />
-                    <CardContent>
-                      {tier.description.map(line => (
-                        <Link to={tier.link} style={{textDecoration: "none"}}>
-                        <Typography variant="subtitle1" align="center" key={line}>
-                          {line}
-                        </Typography>
-                        </Link>
-                      ))}
+
+                    <CardContent>                    
+                    {tier.description.map((item,i) => {
+                        switch (item.type) {
+                          default:
+                            return <Link to={item.link} style={{textDecoration: "none"}}>
+                             <Typography variant="subtitle1" align="center" key={i}>
+                                 {item.name}
+                             </Typography>
+                            </Link>
+                          case 'dynamic':
+                            return <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                            <Typography variant="subtitle1" align="center" key={i}>
+                                 {item.name}
+                             </Typography>
+                            </a>
+                      }
+                    })}
                     </CardContent>
                     </Card>
                 </Grid>
@@ -124,10 +111,6 @@ export class Home extends React.Component {
           </div>
         </main>
 
-        {/* <Typography style={{ marginTop: 50 }} variant='p' align="center">
-          For questions or comments about this site<br />
-          contact <a href="mailto:rajeshwar.akella@adp.com?Subject=Website%20Feedback" target="_top">Custom Majors</a>
-        </Typography> */}
       </div>
     )
   }

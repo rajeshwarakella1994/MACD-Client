@@ -18,7 +18,7 @@ const styles = theme => ({
       
 export class workFlow extends React.Component {
     render(){
-            return <Card style={{height: '500px', width: '1050px', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto'}}>
+            return <Card style={{height: '450px', width: '1050px', alignItems: 'center', marginLeft: 'auto', marginRight: 'auto'}}>
                     <CardContent>
                         <div>
                                 <img src={CMRF} alt=' ' height={400} width={1000} />       

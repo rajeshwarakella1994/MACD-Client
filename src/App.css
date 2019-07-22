@@ -48,3 +48,18 @@ a:hover {
   color: black; 
   /* text-decoration: underline; */
 }
+
+.table-styled {
+  border-collapse: collapse;
+  width: 100%;
+}
+.table-styled th, .table-styled td {
+  border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.table-styled th {
+  text-align: left;
+  background-color: #2a6171;
+  color: white;
+}
+.table-styled tr:nth-child(even) {background-color: #f2f2f2;}

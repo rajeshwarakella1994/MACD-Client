@@ -68,44 +68,41 @@ export class request extends React.Component {
     }
     render() {
 
-        const config = [
-            { label: "Company Name", name: "company_name" },
-            { label: "Processing Region", name: "processing_region" },
-            { label: "Company Codes", name: "company_codes" },
-            { label: "ADP Contact Person", name: "contact_name" },
-            { label: "ADP Contact Title", name: "contact_title" },
-            { label: "ADP Contact Phone #", name: "contact_phone" },
-            { label: "Email Id", name: "contact_email" },
-            { label: "Date", name: "date", type: "date" },
-            {
-                label: "Select", name: "prog_type", type: "select", options: [
-                    { value: "new", label: "New Program" }, { value: "existing", label: "Modification to Existing Program" }, { value: "other", label: "Other" }
-                ]
-            }
+        const requestor = [
+            { label: "Requestor Name", name: "requestor_name" },
+            { label: "Requestor Dept", name: "requestor_dept" },
+            { label: "Requestor Email Id", name: "requestor_email" },
+            { label: "Requestor Phone #", name: "requestor_phone" },
+        ]
+
+        const client = [
+            { label: "Client Name", name: "company_name" },
+            { label: "Company Code(s) List for this Client", name: "company_codes1" },
+            { label: "Company Code(s) needing this change", name: "company_codes2" },
+            { label: "Processing Region(s)", name: "processing_regions" },
         ]
 
         const payroll_info = [
             { label: "Payroll Version", name: "payroll_version" },
             { label: "Approx. # of Pays", name: "approx_pays" },
-            { label: "No. of Controls", name: "number_controls" },
             { label: "Annual Revenue $ ", name: "annual_revenue" }
         ]
+
         return <Card style={{ padding: 10, margin: "auto", maxWidth: 650 }}>
             <CardContent>
-                <Typography variant='body3' style={{ marginBottom: 14 }}>
-                    For a new custom program
-                    or to modify existing custom programs,
-                    complete this form and submit.
+              
+                <Typography variant='h5' style={{ marginBottom: 5 }}>
+                    <b>CUSTOM REQUEST FORM</b>
                 </Typography>
 
-                <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                    <b>General Information</b>
+                <Typography variant='h5' style={{ marginTop: 30, marginBottom: 5 }}>
+                    <b>Requestor Details</b>
                 </Typography>
 
                 <Divider style={{ marginBottom: 20 }} />
 
-                <ValidatorForm style={{ maxWidth: 900, margin: "auto" }} enctype="multipart/form-data" onSubmit={this.submit}>
-                    {config.map((el, i) => {
+                <ValidatorForm style={{ maxWidth: 800, margin: "auto" }} enctype="multipart/form-data" onSubmit={this.submit}>
+                    {requestor.map((el, i) => {
                         switch (el.type) {
                             case "date":
                                 return <DatePicker
@@ -121,18 +118,6 @@ export class request extends React.Component {
                                     value={this.state.values[el.name]}
                                     onChange={this.handleDateChange(el.name)}
                                 />
-                            case "select":
-                                return <FormControl key={i} component="fieldset">
-                                    <FormLabel component="legend">Select an Option</FormLabel>
-                                    <RadioGroup
-                                        value={this.state.values[el.name]} onChange={this.onChange(el.name)}
-                                        aria-label="program"
-                                        row>
-                                        {el.options.map(v => (
-                                            <FormControlLabel key={v.value} value={v.value} control={<Radio />} label={v.label} />
-                                        ))}
-                                    </RadioGroup>
-                                </FormControl>
                             default:
                                 return <TextValidator key={i}
                                     style={{ display: "flex", marginBottom: 20 }}
@@ -147,124 +132,40 @@ export class request extends React.Component {
                         }
                     })}
 
-                    {this.state.values["prog_type"] === "new" && <div><FormControl style={{ marginTop: 5, marginBottom: 10 }} autoComplete='off' >
-                        <FormLabel component="legend" shrink htmlFor="program_type1">Select One</FormLabel>
+                <Typography variant='h5' style={{ marginTop: 55, marginBottom: 5 }}>
+                    <b>Client Details</b>
+                </Typography>
+
+                <Divider style={{ marginBottom: 20 }} />
+
+                    {client.map((el, i) => {
+                        return <TextField key={i}
+                            style={{ display: "flex", marginBottom: 20 }}
+                            label={el.label}
+                            name={el.name}
+                            type={el.type ? el.type : "text"}
+                            autoComplete="off"
+                            value={this.state.values[el.name]}
+                            onChange={this.onChange(el.name)}
+                        />;
+                    })}
+                    
+                    <FormControl style={{ marginTop: 15, marginBottom: 10, marginRight: 50 }} autoComplete='Choose an Option' >
+                        <FormLabel component="legend" shrink htmlFor="client_risk">Client Risk Status</FormLabel>
                         <Select
-                            value={this.state.values["program_type1"]}
-                            onChange={this.onChange("program_type1")}
-                            inputProps={{
-                                shrink: false,
-                                name: 'program_type1',
-                                id: 'program_type1',
-                            }}
+                            value={this.state.values["client_risk"]}
+                            onChange={this.onChange("client_risk")}
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={"Custom Check"}>Custom Check</MenuItem>
-                            <MenuItem value={"Custom Net"}>Custom Net</MenuItem>
-                            <MenuItem value={"Custom Register"}>Custom Register</MenuItem>
+                            <MenuItem value={'Prospect Critical'}>Prospect Critical (Will not onboard if this custom is not done)</MenuItem>
+                            <MenuItem value={'Prospect'}>Prospect</MenuItem>
+                            <MenuItem value={'Client Critical'}>Client Critical (Will leave ADP if this custom is not done)</MenuItem>
+                            <MenuItem value={'Client Medium Risk'}>Client Medium Risk</MenuItem>
+                            <MenuItem value={'Client Low Risk'}>Client Low Risk</MenuItem>
                         </Select>
-                    </FormControl></div>
-                    }
-
-                    {this.state.values["prog_type"] === "existing" && <div><TextField
-                        style={{ marginBottom: 20 }}
-                        label="Enter Program Name"
-                        name="program_type2"
-                        value={this.state.values["program_type2"]}
-                        onChange={this.onChange("program_type2")}
-                    />
-                    </div>
-                    }
-
-                    {this.state.values["prog_type"] === "other" && <div><TextField
-                        style={{ marginBottom: 20 }}
-                        label="Other"
-                        name="program_type3"
-                        value={this.state.values["program_type3"]}
-                        onChange={this.onChange("program_type3")}
-                    />
-                    </div>
-                    }
-
-                    <div>
-                        <FormControl component="fieldset" style={{ flexGrow: 1, flexBasis: "50%" }}>
-                            <FormLabel component="legend">An Existing Company ?</FormLabel>
-                            <RadioGroup
-                                value={this.state.values["Company_with_ADP"]}
-                                onChange={this.onChange("Company_with_ADP")}
-                                aria-label="Company_with_ADP"
-                                row>
-                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                <FormControlLabel value="No" control={<Radio />} label="No" />
-                            </RadioGroup>
-                        </FormControl>
-                    </div>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Client Processing Set Up:</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["processing"]}
-                            onChange={this.onChange("processing")}
-                            aria-label="processing"
-                            row>
-                            <FormControlLabel value="NON-NOS" control={<Radio />} label="Non-NOS" />
-                            <FormControlLabel value="NOS" control={<Radio />} label="NOS" />
-                            <FormControlLabel value="Expnd-NOS" control={<Radio />} label="NOS with expanded data" />
-                        </RadioGroup>
                     </FormControl>
 
-                    <div style={{ display: "flex" }}>
-                        <FormControl component="fieldset" style={{ flexGrow: 1, flexBasis: "50%" }}>
-                            <FormLabel component="legend">Is this a PLD Company ?</FormLabel>
-                            <RadioGroup
-                                value={this.state.values["PLD"]}
-                                onChange={this.onChange("PLD")}
-                                aria-label="PLD"
-                                row>
-                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                <FormControlLabel value="No" control={<Radio />} label="No" />
-                            </RadioGroup>
-                        </FormControl>
-                    </div>
-
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Labour Distribution Reporting:</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["LDR"]}
-                            onChange={this.onChange("LDR")}
-                            aria-label="LDR"
-                            row>
-                            <FormControlLabel value="Dept" control={<Radio />} label="Dept" />
-                            <FormControlLabel value="Cost" control={<Radio />} label="Cost" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-
-                    <div>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend"> Is this an ADP Mobile company?</FormLabel>
-                            <RadioGroup
-                                value={this.state.values["ADP_Mobile"]}
-                                onChange={this.onChange("ADP_Mobile")}
-                                aria-label="ADP_Mobile"
-                                row>
-                                <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                <FormControlLabel value="No" control={<Radio />} label="No" />
-                            </RadioGroup>
-                        </FormControl>
-                    </div>
-
-                    <Typography variant='body4' style={{ marginBottom: 14 }}>
-                        <b>Notes:</b><br />
-                        It is the responsibility of regional associates to work with the client to determine requirements. <br />
-                        All programs require regional beta testing before "live" production. <br /><br />
-
-                        Your new custom request will be assigned to an Analyst for estimate analysis. The assigned Analyst may contact you to discuss the custom requirements in more detail.
-                    </Typography>
-
-                    <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                        <b>Payroll Information</b>
+                    <Typography variant='h5' style={{ marginTop: 40, marginBottom: 5 }}>
+                        <b>Payroll Details</b>
                     </Typography>
 
                     <Divider style={{ marginBottom: 20 }} />
@@ -274,20 +175,6 @@ export class request extends React.Component {
                         <Select
                             value={this.state.values["pay_frequency"]}
                             onChange={this.onChange("pay_frequency")}
-                        >
-                            <MenuItem value={'Weekly'}>Weekly</MenuItem>
-                            <MenuItem value={'Bi-Weekly'}>Bi-Weekly</MenuItem>
-                            <MenuItem value={'Semi-Monthly'}>Semi-Monthly</MenuItem>
-                            <MenuItem value={'Monthly'}>Monthly</MenuItem>
-                            <MenuItem value={'Other'}>Other</MenuItem>
-                        </Select>
-                    </FormControl>
-
-                    <FormControl style={{ marginTop: 5, marginBottom: 10 }} autoComplete='off' >
-                        <FormLabel component="legend" shrink htmlFor="req_frequency">Request Frequency</FormLabel>
-                        <Select
-                            value={this.state.values["req_frequency"]}
-                            onChange={this.onChange("req_frequency")}
                         >
                             <MenuItem value={'Weekly'}>Weekly</MenuItem>
                             <MenuItem value={'Bi-Weekly'}>Bi-Weekly</MenuItem>
@@ -310,39 +197,79 @@ export class request extends React.Component {
                         />;
                     })}
 
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Will Program be run at multiple Regions ?</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["Multi_Regions"]}
-                            onChange={this.onChange("Multi_Regions")}
-                            aria-label="Multi_Regions"
-                            row>
-                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Critical Project (i.e. Will client leave ADP if project not done?)</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["Criticality"]}
-                            onChange={this.onChange("Criticality")}
-                            aria-label="criticality"
-                            row>
-                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-
-                    <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                        <b>Business Scope and Objectives</b>
+                    <Typography variant='h5' style={{ marginTop: 40, marginBottom: 5 }}>
+                        <b>Requirement Details</b>
                     </Typography>
 
                     <Divider style={{ marginBottom: 20 }} />
 
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Select One Option:</FormLabel>
+                        <RadioGroup
+                            value={this.state.values["request_type"]}
+                            onChange={this.onChange("request_type")}
+                            aria-label="request_type"
+                            row>
+                            <FormControlLabel value="Custom Check" control={<Radio />} label="Custom Check" />
+                            <FormControlLabel value="Custom Net" control={<Radio />} label="Custom Net" />
+                            <FormControlLabel value="Custom Register" control={<Radio />} label="Custom Register" />
+                        </RadioGroup>
+                    </FormControl>
+
+                    <FormControl component="fieldset" style={{marginTop : -10}}>
+                        <RadioGroup
+                            value={this.state.values["prog_type"]}
+                            onChange={this.onChange("prog_type")}
+                            aria-label="prog_type"
+                            row>
+                            <FormControlLabel value="New Program" control={<Radio />} label="New Program" />
+                            <FormControlLabel value="Existing Program Modification" control={<Radio />} label="Existing Program Modification" />
+                        </RadioGroup>
+                    </FormControl>
+
+                    {this.state.values["prog_type"] === "Existing Program Modification" && <div>
+                        <TextField
+                        style={{ marginTop: -15, marginBottom: 20 }}
+                        label="Enter Program Name"
+                        name="program_type2"
+                        value={this.state.values["existing_prog"]}
+                        onChange={this.onChange("existing_prog")}
+                    />
+                    </div>
+                    }
+
+                    <Typography variant='h5' style={{ marginTop: 40, marginBottom: 5 }}>
+                        <b>Functional Requirements</b>
+                    </Typography>
+
+                    <Divider style={{ marginBottom: 20 }} />
+
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Special Calcs ?</FormLabel>
+                        <RadioGroup
+                            value={this.state.values["calcs"]}
+                            onChange={this.onChange("calcs")}
+                            aria-label="calcs"
+                            row>
+                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                            <FormControlLabel value="No" control={<Radio />} label="No" />
+                        </RadioGroup>
+                    </FormControl>
+
                     <Typography variant='body4' style={{ marginBottom: 14 }}>
-                        Please define the following :<br />
-                        Scope and Objectives (please enumerate and be specific):
+                        If answer is Yes, please list the logic of these Special Calcs in the Functional Requirements section.
+                    </Typography>
+
+                    <TextField
+                        style={{ display: "flex", marginBottom: 20 }}
+                        label="Selection Criteria"
+                        name="selection_criteria"
+                        value={this.state.values["selection_criteria"]}
+                        onChange={this.onChange("selection_criteria")}
+                    />
+
+                    <Typography variant='body4' style={{ marginBottom: 14 }}>
+                        Functional Requirements (please enumerate and be specific):
                     </Typography>
 
                     <TextField
@@ -360,87 +287,13 @@ export class request extends React.Component {
                         onChange={this.onChange("scope")}
                     />
 
-                    <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                        <b>Functional Requirements</b>
-                    </Typography>
-
-                    <Divider style={{ marginBottom: 20 }} />
-
                     <Typography variant='body4' style={{ marginBottom: 14 }}>
-                        Define the functional requirements (please be very specific):
+                        <b>Notes:</b><br />
+                        It is the responsibility of regional associates to work with the client to determine requirements. <br />
+                        All programs require regional beta testing before "live" production. <br /><br />
+
+                        Your new custom request will be assigned to an Analyst for estimate analysis. The assigned Analyst may contact you to discuss the custom requirements in more detail.
                     </Typography>
-
-                    <TextField
-                        id="functional_scope"
-                        style={{ display: "flex", marginBottom: 20 }}
-                        label={""}
-                        name={"functional_scope"}
-                        type={"text"}
-                        autoComplete="off"
-                        variant="outlined"
-                        multiline={true}
-                        rows={5}
-                        rowsMax={10}
-                        value={this.state.values["functional_scope"]}
-                        onChange={this.onChange("functional_scope")}
-                    />
-
-                    <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                        <b>Special Calcs</b>
-                    </Typography>
-
-                    <Divider style={{ marginBottom: 20 }} />
-
-                    <Typography variant='body4' style={{ marginBottom: 14 }}>
-                        If request is for an Autopay Custom Net:
-                </Typography>
-
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Are there any special calcs that will affect processing ?</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["calcs"]}
-                            onChange={this.onChange("calcs")}
-                            aria-label="calcs"
-                            row>
-                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Are there any existing Autopay Custom Net programs set up to run for this client ?</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["existing_custom_net"]}
-                            onChange={this.onChange("existing_custom_net")}
-                            aria-label="existing_custom_net"
-                            row>
-                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-
-                    <Typography variant='body4' style={{ marginBottom: 14 }}>
-                        If answer is Yes, please list the logic of these Special Calcs in the Functional Requirements section above.
-                        This logic must be in English, and not represented in Special Calc Screen format.
-                </Typography>
-
-                    <Typography variant='h5' style={{ marginTop: 20, marginBottom: 5 }}>
-                        <b>Custom Report</b>
-                    </Typography>
-
-                    <Divider style={{ marginBottom: 20 }} />
-
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">Is a custom report required ?</FormLabel>
-                        <RadioGroup
-                            value={this.state.values["custom_report"]}
-                            onChange={this.onChange("custom_report")}
-                            aria-label="custom_report"
-                            row>
-                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
 
                     <Typography variant='h5' style={{ marginTop: 20 }}>
                         <b>Attachments</b>
@@ -448,11 +301,9 @@ export class request extends React.Component {
 
                     <Divider style={{ marginBottom: 20, marginTop: 5 }} />
 
-                    {/* <form action="/action_page.php"> */}
                     <div>
                     Select Attachments: <input type="file" ref={r => this.filesRef = r} name="files" multiple />
                     </div>
-                    {/* </form> */}
 
                     <div style={{marginTop: 40}}>
                     <Button type="submit" variant="contained">
